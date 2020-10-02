@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+enum MessageType {
+	CONTROL_MSG = 0;
+	DRIVER_INPUT_MSG = 1;
+	VEHICLE_DYNAMIC_MSG = 2;
+	GPS_MSG = 3;
+	POWERTRAIN_MSG = 4;
+}
+
+enum State {
+	STOPPED = 0;
+	STARTED = 1;
+	RESET = 2;
+}
+
+message Control {
+	State state = 1;
+}
+
+message DriverInput {
+	double throttle = 1;
+	double brake = 2;
+	double steering_wheel_angle = 3;
+}
+
+message VehicleDynamic {
+	double velocity = 1;
+	double ax = 2;
+	double ay = 3;
+	double az = 4;
+}
+
+message Gps {
+	double lon = 1;
+	double lat = 2;
+	double elevation = 3;
+}
+
+message Powertrain {
+	double rotation = 1;
+	uint32 gear = 2;
+
+	double engine_power_out = 3;
+	double engine_torque = 4;
+	double engine_fuel_consumption_abs = 5;
+	double engine_fuel_consumption_act = 6;
+	double engine_fuel_consumption_avg = 7;
+	double engine_fuel_level = 8;
+
+	double gearbox_power_in = 9;
+	double gearbox_power_out = 10;
+	double gearbox_rotation_in = 11;
+	double gearbox_rotation_out = 12;
+}
+
+
