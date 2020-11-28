@@ -1,9 +1,11 @@
-syntax = "proto3";
+syntax = "proto2";
+
+package OpenDashboard.Proto;
 
 enum MessageType {
 	CONTROL_MSG = 0;
 	DRIVER_INPUT_MSG = 1;
-	VEHICLE_DYNAMIC_MSG = 2;
+	DYNAMICS_MSG = 2;
 	GPS_MSG = 3;
 	POWERTRAIN_MSG = 4;
 }
@@ -15,43 +17,49 @@ enum State {
 }
 
 message Control {
-	State state = 1;
+	required State state = 1;
 }
 
 message DriverInput {
-	double throttle = 1;
-	double brake = 2;
-	double steering_wheel_angle = 3;
+	optional MessageType msg_type = 1 [default = DRIVER_INPUT_MSG];
+
+	optional double throttle = 2;				// % [0..1]
+	optional double brake = 3;					// % [0..1]
+	optional double clutch = 4;					// % [0..1]
+	optional double steering_wheel_angle = 5;	// deg
 }
 
-message VehicleDynamic {
-	double velocity = 1;
-	double ax = 2;
-	double ay = 3;
-	double az = 4;
+message Dynamics {
+	optional MessageType msg_type = 1 [default = DYNAMICS_MSG];
+
+	optional double velocity = 2;	// m/s
+	optional double ax = 3;			// m/s^2
+	optional double ay = 4;			// m/s^2
+	optional double az = 5;			// m/s^2
 }
 
 message Gps {
-	double lon = 1;
-	double lat = 2;
-	double elevation = 3;
+	optional MessageType msg_type = 1 [default = GPS_MSG];
+
+	optional double lon = 2;		// deg (i.e. 6.9500245619211167)
+	optional double lat = 3;		// deg (i.e. 50.338081132605367)
+	optional double elevation = 4;	// m
 }
 
 message Powertrain {
-	double rotation = 1;
-	uint32 gear = 2;
+	optional MessageType msg_type = 1 [default = POWERTRAIN_MSG];
 
-	double engine_power_out = 3;
-	double engine_torque = 4;
-	double engine_fuel_consumption_abs = 5;
-	double engine_fuel_consumption_act = 6;
-	double engine_fuel_consumption_avg = 7;
-	double engine_fuel_level = 8;
+	optional double engine_rotation = 2;				// rpm
+	optional double engine_power_out = 3;				// kW
+	optional double engine_torque = 4;					// Nm
+	optional double engine_fuel_consumption_abs = 5;	// l/s
+	optional double engine_fuel_consumption_act = 6;	// l/s
+	optional double engine_fuel_consumption_avg = 7;	// l/s
+	optional double engine_fuel_level = 8;				// % [0..1]
 
-	double gearbox_power_in = 9;
-	double gearbox_power_out = 10;
-	double gearbox_rotation_in = 11;
-	double gearbox_rotation_out = 12;
+	optional sint32 gearbox_gear = 9;					// P=-2, R=-1, N=0, 1=1, 2=2, ...
+	optional double gearbox_power_in = 10;				// kW
+	optional double gearbox_power_out = 11;				// kW
+	optional double gearbox_rotation_in = 12;			// rpm
+	optional double gearbox_rotation_out = 13;			// rpm
 }
-
-
